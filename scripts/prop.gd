@@ -81,6 +81,56 @@ func take_damage(amount: float):
 		else:
 			queue_free()
 
+func _free_node_later(n: Node, delay: float):
+	get_tree().create_timer(delay).timeout.connect(_free_node.bind(n))
+
+func _free_node(n: Node):
+	if is_instance_valid(n):
+		n.queue_free()
+
+func _spawn_burst(pos: Vector3, count: int, color_a: Color, color_b: Color, lifetime: float, spread_deg: float, speed_min: float, speed_max: float, gravity_y: float, scale_min: float, scale_max: float, quad_size: float = 0.3):
+	var ps := GPUParticles3D.new()
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	pm.emission_sphere_radius = 0.35
+	pm.direction = Vector3.UP
+	pm.spread = spread_deg
+	pm.initial_velocity_min = speed_min
+	pm.initial_velocity_max = speed_max
+	pm.gravity = Vector3(0, gravity_y, 0)
+	pm.scale_min = scale_min
+	pm.scale_max = scale_max
+	ps.process_material = pm
+	ps.amount = count
+	ps.lifetime = lifetime
+	ps.one_shot = true
+	ps.explosiveness = 1.0
+	ps.emitting = true
+	
+	var quad := QuadMesh.new()
+	quad.size = Vector2(quad_size, quad_size)
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.vertex_color_use_as_albedo = true
+	quad.material = mat
+	ps.mesh = quad
+	
+	var grad := Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 0.3, 1.0])
+	grad.colors = PackedColorArray([
+		color_a,
+		color_b,
+		Color(color_b.r, color_b.g, color_b.b, 0.0)
+	])
+	ps.color_ramp = grad
+	
+	var scene = get_tree().current_scene
+	scene.add_child(ps)
+	ps.global_position = pos
+	_free_node_later(ps, lifetime + 0.5)
+
 func explode():
 	# Play explosion sound
 	var boom = AudioStreamPlayer3D.new()
@@ -90,29 +140,48 @@ func explode():
 	get_tree().current_scene.add_child(boom)
 	boom.global_position = global_position
 	boom.play()
-	boom.finished.connect(func(): boom.queue_free())
+	boom.finished.connect(_free_node.bind(boom))
 	
-	# Create explosion particle effect or visual sphere
+	# Flash light
+	var flash = OmniLight3D.new()
+	flash.light_color = Color(1.0, 0.85, 0.55)
+	flash.light_energy = 18.0
+	flash.omni_range = explosion_radius * 2.4
+	flash.shadow_enabled = false
+	get_tree().current_scene.add_child(flash)
+	flash.global_position = global_position
+	var tw = get_tree().create_tween()
+	tw.tween_property(flash, "light_energy", 0.0, 0.4).set_trans(Tween.TRANS_QUAD)
+	tw.tween_callback(_free_node.bind(flash))
+	
+	# Fireball + sparks + smoke
+	_spawn_burst(global_position, 110, Color(1, 0.95, 0.6, 1), Color(1, 0.35, 0.08, 1), 0.6, 180.0, 5.0, 14.0, -4.0, 0.5, 1.5, 0.55)
+	_spawn_burst(global_position, 55, Color(1, 0.6, 0.25, 1), Color(0.8, 0.15, 0.05, 1), 0.9, 180.0, 8.0, 18.0, 9.0, 0.2, 0.6, 0.2)
+	_spawn_burst(global_position, 30, Color(0.4, 0.39, 0.38, 1), Color(0.12, 0.12, 0.12, 1), 2.2, 30.0, 1.5, 4.0, -0.6, 1.0, 2.6, 1.1)
+	
+	# Expanding glow sphere (quick punch)
 	var sphere = MeshInstance3D.new()
 	var mesh = SphereMesh.new()
-	mesh.radius = explosion_radius
-	mesh.height = explosion_radius * 2
+	mesh.radius = explosion_radius * 0.28
+	mesh.height = explosion_radius * 0.56
+	mesh.radial_segments = 20
+	mesh.rings = 10
 	sphere.mesh = mesh
 	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(1.0, 0.4, 0.1, 0.8)
+	mat.albedo_color = Color(1.0, 0.6, 0.25, 0.85)
 	mat.emission_enabled = true
-	mat.emission = Color(1.0, 0.4, 0.1)
-	mat.emission_energy_multiplier = 2.0
-	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	mat.emission = Color(1.0, 0.45, 0.12)
+	mat.emission_energy_multiplier = 3.0
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.disable_receive_shadows = true
 	sphere.material_override = mat
 	get_tree().current_scene.add_child(sphere)
 	sphere.global_position = global_position
-	
-	# Animate sphere fading
-	var tween = get_tree().create_tween()
-	tween.tween_property(sphere, "scale", Vector3(1.2, 1.2, 1.2), 0.2)
-	tween.parallel().tween_property(mat, "albedo_color:a", 0.0, 0.3)
-	tween.tween_callback(func(): sphere.queue_free())
+	var tw2 = get_tree().create_tween()
+	tw2.tween_property(sphere, "scale", Vector3(2.2, 2.2, 2.2), 0.22).set_trans(Tween.TRANS_QUAD)
+	tw2.parallel().tween_property(mat, "albedo_color:a", 0.0, 0.3)
+	tw2.tween_callback(_free_node.bind(sphere))
 	
 	# Apply physical force to nearby objects
 	var props = get_tree().get_nodes_in_group("props")
@@ -124,6 +193,9 @@ func explode():
 				var dir = (p.global_position - global_position).normalized()
 				var force_amt = explosion_force * (1.0 - dist / explosion_radius)
 				p.apply_central_impulse(dir * force_amt * p.mass)
+				# chip damage to nearby barrels = chain reactions
+				if p.is_explosive:
+					p.take_damage(90.0 * (1.0 - dist / explosion_radius))
 				
 	# Check player
 	if is_instance_valid(GameManager.player):
@@ -131,5 +203,7 @@ func explode():
 		if p_dist < explosion_radius:
 			var dir = (GameManager.player.global_position - global_position).normalized()
 			GameManager.player.velocity += dir * explosion_force * (1.0 - p_dist / explosion_radius)
-			
+			if GameManager.player.has_method("add_shake"):
+				GameManager.player.add_shake(0.5 * (1.0 - p_dist / explosion_radius))
+		
 	queue_free()

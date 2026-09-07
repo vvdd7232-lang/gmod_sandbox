@@ -1,6 +1,9 @@
-[gd_resource type="StandardMaterial3D" format=3]
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/barrel_steel.jpg" id="1_tex"]
 
 [resource]
-albedo_color = Color(0.180392, 0.368627, 0.607843, 1)
-metallic = 0.5
-roughness = 0.4
+albedo_texture = ExtResource("1_tex")
+albedo_color = Color(0.8, 0.88, 1, 1)
+metallic = 0.85
+roughness = 0.42
