@@ -1,0 +1,148 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/dummy_ragdoll.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/prop.gd" id="2_prop"]
+[ext_resource type="Material" path="res://materials/ragdoll_mat.tres" id="3_mat"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_torso"]
+size = Vector3(0.6, 1.0, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+size = Vector3(0.6, 1.0, 0.4)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_head"]
+radius = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arm"]
+size = Vector3(0.2, 0.8, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+size = Vector3(0.2, 0.8, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_leg"]
+size = Vector3(0.25, 1.0, 0.25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+size = Vector3(0.25, 1.0, 0.25)
+
+[node name="DummyRagdoll" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Torso" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 20.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Torso"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Torso"]
+shape = SubResource("BoxShape3D_torso")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Torso"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("BoxMesh_torso")
+
+[node name="Head" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 8.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Head"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head"]
+shape = SubResource("SphereShape3D_head")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("SphereMesh_head")
+
+[node name="LeftArm" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.5, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 10.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Arm"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftArm"]
+shape = SubResource("BoxShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LeftArm"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("BoxMesh_arm")
+
+[node name="RightArm" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.5, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 10.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Arm"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightArm"]
+shape = SubResource("BoxShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightArm"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("BoxMesh_arm")
+
+[node name="LeftLeg" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.5, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 12.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Leg"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftLeg"]
+shape = SubResource("BoxShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LeftLeg"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("BoxMesh_leg")
+
+[node name="RightLeg" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.5, 0)
+collision_layer = 4
+collision_mask = 7
+mass = 12.0
+script = ExtResource("2_prop")
+prop_name = "Ragdoll Leg"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightLeg"]
+shape = SubResource("BoxShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightLeg"]
+material_override = ExtResource("3_mat")
+mesh = SubResource("BoxMesh_leg")
+
+[node name="JointHead" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+node_a = NodePath("../Torso")
+node_b = NodePath("../Head")
+
+[node name="JointLArm" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.9, 0)
+node_a = NodePath("../Torso")
+node_b = NodePath("../LeftArm")
+
+[node name="JointRArm" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.9, 0)
+node_a = NodePath("../Torso")
+node_b = NodePath("../RightArm")
+
+[node name="JointLLeg" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.0, 0)
+node_a = NodePath("../Torso")
+node_b = NodePath("../LeftLeg")
+
+[node name="JointRLeg" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.0, 0)
+node_a = NodePath("../Torso")
+node_b = NodePath("../RightLeg")

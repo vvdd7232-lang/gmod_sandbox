@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/prop.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/crate_mat.tres" id="2_mat"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c"]
+size = Vector3(1, 1, 1)
+
+[node name="Crate" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 7
+mass = 15.0
+script = ExtResource("1_script")
+prop_name = "Wooden Crate"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_c")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = ExtResource("2_mat")
+mesh = SubResource("BoxMesh_c")
