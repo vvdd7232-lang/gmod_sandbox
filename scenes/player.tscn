@@ -29,11 +29,10 @@ top_radius = 0.022
 bottom_radius = 0.055
 height = 0.2
 
-[sub_resource type="TorusMesh" id="TorusMesh_b_ring"]
-inner_radius = 0.08
-outer_radius = 0.115
-rings = 40
-ring_sides = 6
+[sub_resource type="CylinderMesh" id="CylinderMesh_b_ring"]
+top_radius = 0.115
+bottom_radius = 0.115
+height = 0.035
 
 [sub_resource type="BoxMesh" id="BoxMesh_b_rail"]
 size = Vector3(0.045, 0.045, 0.38)
@@ -274,7 +273,7 @@ mesh = SubResource("BoxMesh_b_glow")
 [node name="GlowRing" type="MeshInstance3D" parent="Neck/Camera3D/WeaponModels/PhysgunModel"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.46)
 material_override = SubResource("Mat_pg_cyan")
-mesh = SubResource("TorusMesh_b_ring")
+mesh = SubResource("CylinderMesh_b_ring")
 
 [node name="Handle" type="MeshInstance3D" parent="Neck/Camera3D/WeaponModels/PhysgunModel"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17, -0.12)
@@ -282,7 +281,7 @@ material_override = SubResource("Mat_pg_handle")
 mesh = SubResource("BoxMesh_b_handle")
 
 [node name="Viewfinder" type="MeshInstance3D" parent="Neck/Camera3D/WeaponModels/PhysgunModel"]
-transform = Transform3D(1, 0, 0, 0, 0, 0, 1, 0, -1, -1.22465e-08, 0, 0.06, 0.01)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.06, 0.01)
 material_override = SubResource("Mat_pg_orange")
 mesh = SubResource("CylinderMesh_b_disc")
 

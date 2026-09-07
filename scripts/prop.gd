@@ -174,7 +174,6 @@ func explode():
 	mat.emission_energy_multiplier = 3.0
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.disable_receive_shadows = true
 	sphere.material_override = mat
 	get_tree().current_scene.add_child(sphere)
 	sphere.global_position = global_position
