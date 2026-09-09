@@ -1,0 +1,103 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/fan.gd" id="1_script"]
+
+[sub_resource type="BoxShape3D" id="Shape_fan"]
+size = Vector3(0.75, 1.45, 1.0)
+
+[sub_resource type="CylinderMesh" id="Mesh_base"]
+top_radius = 0.38
+bottom_radius = 0.38
+height = 0.12
+
+[sub_resource type="CylinderMesh" id="Mesh_pole"]
+top_radius = 0.07
+bottom_radius = 0.07
+height = 0.9
+
+[sub_resource type="CylinderMesh" id="Mesh_motor"]
+top_radius = 0.18
+bottom_radius = 0.18
+height = 0.52
+
+[sub_resource type="CylinderMesh" id="Mesh_rim"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.04
+
+[sub_resource type="BoxMesh" id="Mesh_blade"]
+size = Vector3(1.12, 0.07, 0.12)
+
+[sub_resource type="SphereMesh" id="Mesh_hub"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_dark"]
+albedo_color = Color(0.14, 0.15, 0.17, 1)
+metallic = 0.8
+roughness = 0.38
+
+[sub_resource type="StandardMaterial3D" id="Mat_motor"]
+albedo_color = Color(0.55, 0.58, 0.63, 1)
+metallic = 0.85
+roughness = 0.32
+
+[sub_resource type="StandardMaterial3D" id="Mat_blade"]
+albedo_color = Color(0.78, 0.8, 0.84, 1)
+metallic = 0.5
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_glow"]
+albedo_color = Color(0.1, 0.6, 0.9, 1)
+emission_enabled = true
+emission = Color(0.1, 0.85, 1, 1)
+emission_energy_multiplier = 2.0
+roughness = 0.4
+
+[node name="Fan" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 7
+mass = 45.0
+script = ExtResource("1_script")
+prop_name = "Industrial Fan"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, -0.04)
+shape = SubResource("Shape_fan")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+material_override = SubResource("Mat_dark")
+mesh = SubResource("Mesh_base")
+
+[node name="Pole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+material_override = SubResource("Mat_dark")
+mesh = SubResource("Mesh_pole")
+
+[node name="Motor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.08, 0)
+material_override = SubResource("Mat_motor")
+mesh = SubResource("Mesh_motor")
+
+[node name="RimGlow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.08, -0.24)
+material_override = SubResource("Mat_glow")
+mesh = SubResource("Mesh_rim")
+
+[node name="Rotor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -0.35)
+
+[node name="BladeA" type="MeshInstance3D" parent="Rotor"]
+material_override = SubResource("Mat_blade")
+mesh = SubResource("Mesh_blade")
+
+[node name="BladeB" type="MeshInstance3D" parent="Rotor"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("Mat_blade")
+mesh = SubResource("Mesh_blade")
+
+[node name="HubGlow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -0.38)
+material_override = SubResource("Mat_glow")
+mesh = SubResource("Mesh_hub")

@@ -1,0 +1,100 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/prop.gd" id="1_script"]
+
+[sub_resource type="CylinderShape3D" id="Shape_col"]
+radius = 0.3
+height = 0.6
+
+[sub_resource type="CylinderMesh" id="Mesh_base"]
+top_radius = 0.36
+bottom_radius = 0.36
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_s1"]
+top_radius = 0.27
+bottom_radius = 0.27
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_s2"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_s3"]
+top_radius = 0.13
+bottom_radius = 0.13
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_s4"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_tip"]
+top_radius = 0.02
+bottom_radius = 0.05
+height = 0.12
+
+[sub_resource type="CylinderMesh" id="Mesh_stripe"]
+top_radius = 0.235
+bottom_radius = 0.235
+height = 0.08
+
+[sub_resource type="StandardMaterial3D" id="Mat_orange"]
+albedo_color = Color(0.98, 0.42, 0.05, 1)
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_white"]
+albedo_color = Color(0.98, 0.97, 0.93, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_dark"]
+albedo_color = Color(0.16, 0.17, 0.19, 1)
+roughness = 0.7
+
+[node name="TrafficCone" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 7
+mass = 7.0
+script = ExtResource("1_script")
+prop_name = "Traffic Cone"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0)
+shape = SubResource("Shape_col")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+material_override = SubResource("Mat_dark")
+mesh = SubResource("Mesh_base")
+
+[node name="Seg1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("Mat_orange")
+mesh = SubResource("Mesh_s1")
+
+[node name="Seg2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+material_override = SubResource("Mat_orange")
+mesh = SubResource("Mesh_s2")
+
+[node name="Seg3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+material_override = SubResource("Mat_orange")
+mesh = SubResource("Mesh_s3")
+
+[node name="Seg4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("Mat_orange")
+mesh = SubResource("Mesh_s4")
+
+[node name="Tip" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+material_override = SubResource("Mat_orange")
+mesh = SubResource("Mesh_tip")
+
+[node name="Stripe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+material_override = SubResource("Mat_white")
+mesh = SubResource("Mesh_stripe")

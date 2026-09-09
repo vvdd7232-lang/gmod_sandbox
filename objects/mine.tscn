@@ -1,0 +1,90 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/mine.gd" id="1_script"]
+
+[sub_resource type="CylinderShape3D" id="Shape_mine"]
+radius = 0.22
+height = 0.34
+
+[sub_resource type="CylinderMesh" id="Mesh_puck"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.1
+
+[sub_resource type="SphereMesh" id="Mesh_dome"]
+radius = 0.21
+height = 0.42
+
+[sub_resource type="CylinderMesh" id="Mesh_sensor"]
+top_radius = 0.015
+bottom_radius = 0.015
+height = 0.06
+
+[sub_resource type="SphereMesh" id="Mesh_led"]
+radius = 0.03
+height = 0.06
+
+[sub_resource type="StandardMaterial3D" id="Mat_puck"]
+albedo_color = Color(0.1, 0.11, 0.12, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_body"]
+albedo_color = Color(0.3, 0.32, 0.24, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Mat_sensor"]
+albedo_color = Color(0.55, 0.57, 0.6, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_led"]
+albedo_color = Color(0.6, 0.05, 0.02, 1)
+emission_enabled = true
+emission = Color(1, 0.1, 0.03, 1)
+emission_energy_multiplier = 2.2
+roughness = 0.4
+
+[node name="Mine" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 7
+mass = 12.0
+script = ExtResource("1_script")
+prop_name = "Proximity Mine"
+is_explosive = true
+explosion_force = 22.0
+explosion_radius = 6.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0)
+shape = SubResource("Shape_mine")
+
+[node name="Puck" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+material_override = SubResource("Mat_puck")
+mesh = SubResource("Mesh_puck")
+
+[node name="Dome" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+material_override = SubResource("Mat_body")
+mesh = SubResource("Mesh_dome")
+
+[node name="SensorA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.34, 0)
+material_override = SubResource("Mat_sensor")
+mesh = SubResource("Mesh_sensor")
+
+[node name="SensorB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.34, 0.0866)
+material_override = SubResource("Mat_sensor")
+mesh = SubResource("Mesh_sensor")
+
+[node name="SensorC" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.34, -0.0866)
+material_override = SubResource("Mat_sensor")
+mesh = SubResource("Mesh_sensor")
+
+[node name="Led" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+material_override = SubResource("Mat_led")
+mesh = SubResource("Mesh_led")

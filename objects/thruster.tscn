@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/thruster.gd" id="1_script"]
 
@@ -7,10 +7,20 @@ albedo_color = Color(0.3, 0.3, 0.35, 1)
 metallic = 0.8
 roughness = 0.3
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dark"]
+albedo_color = Color(0.12, 0.13, 0.15, 1)
+metallic = 0.9
+roughness = 0.25
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_body"]
 top_radius = 0.15
 bottom_radius = 0.25
 height = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_base"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.08
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flame"]
 transparency = 1
@@ -23,18 +33,47 @@ top_radius = 0.05
 bottom_radius = 0.01
 height = 0.8
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_core"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.9, 0.6, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_flamecore"]
+top_radius = 0.018
+bottom_radius = 0.004
+height = 0.6
+
 [node name="Thruster" type="Node3D"]
 script = ExtResource("1_script")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29, 0)
 material_override = SubResource("StandardMaterial3D_metal")
 mesh = SubResource("CylinderMesh_body")
 
+[node name="BaseRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_dark")
+mesh = SubResource("CylinderMesh_base")
+
 [node name="Flame" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, -0.4, 0)
 material_override = SubResource("StandardMaterial3D_flame")
 mesh = SubResource("CylinderMesh_flame")
+
+[node name="FlameCore" type="MeshInstance3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+material_override = SubResource("StandardMaterial3D_core")
+mesh = SubResource("CylinderMesh_flamecore")
+
+[node name="FlameLight" type="OmniLight3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+light_color = Color(1, 0.55, 0.2, 1)
+light_energy = 4.0
+omni_range = 3.0
+shadow_enabled = false
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 unit_size = 10.0

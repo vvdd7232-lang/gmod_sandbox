@@ -71,7 +71,12 @@ func _setup_props_menu():
 		{"name": "Jump Ramp", "path": "res://objects/ramp.tscn"},
 		{"name": "Wooden Plank", "path": "res://objects/plank.tscn"},
 		{"name": "Heavy Metal Cube", "path": "res://objects/cube.tscn"},
-		{"name": "Ragdoll Dummy", "path": "res://objects/dummy_ragdoll.tscn"}
+		{"name": "Ragdoll Dummy", "path": "res://objects/dummy_ragdoll.tscn"},
+		{"name": "Traffic Cone", "path": "res://objects/traffic_cone.tscn"},
+		{"name": "Beach Ball", "path": "res://objects/beach_ball.tscn"},
+		{"name": "Cardboard Box", "path": "res://objects/cardboard_box.tscn"},
+		{"name": "Rubber Tire", "path": "res://objects/tire.tscn"},
+		{"name": "Metal Pipe", "path": "res://objects/metal_pipe.tscn"}
 	]
 	
 	for item in prop_list:
@@ -86,7 +91,10 @@ func _setup_entities_menu():
 	tab_entities.pressed.connect(func(): _show_tab("entities"))
 	
 	var ent_list = [
-		{"name": "Automated Turret", "path": "res://objects/turret.tscn"}
+		{"name": "Automated Turret", "path": "res://objects/turret.tscn"},
+		{"name": "Industrial Fan", "path": "res://objects/fan.tscn"},
+		{"name": "Launch Pad", "path": "res://objects/bounce_pad.tscn"},
+		{"name": "Proximity Mine", "path": "res://objects/mine.tscn"}
 	]
 	
 	for item in ent_list:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/prop.gd" id="1_script"]
 [ext_resource type="Material" path="res://materials/crate_mat.tres" id="2_mat"]
@@ -7,7 +7,18 @@
 size = Vector3(1, 1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_c"]
-size = Vector3(1, 1, 1)
+size = Vector3(0.98, 0.98, 0.98)
+
+[sub_resource type="BoxMesh" id="BoxMesh_edge"]
+size = Vector3(0.05, 1.02, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lid"]
+size = Vector3(1.0, 0.035, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_edge"]
+albedo_color = Color(0.33, 0.23, 0.13, 1)
+metallic = 0.0
+roughness = 0.9
 
 [node name="Crate" type="RigidBody3D"]
 collision_layer = 4
@@ -22,3 +33,28 @@ shape = SubResource("BoxShape3D_c")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 material_override = ExtResource("2_mat")
 mesh = SubResource("BoxMesh_c")
+
+[node name="EdgeA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.465, 0, -0.465)
+material_override = SubResource("Mat_edge")
+mesh = SubResource("BoxMesh_edge")
+
+[node name="EdgeB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.465, 0, -0.465)
+material_override = SubResource("Mat_edge")
+mesh = SubResource("BoxMesh_edge")
+
+[node name="EdgeC" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.465, 0, 0.465)
+material_override = SubResource("Mat_edge")
+mesh = SubResource("BoxMesh_edge")
+
+[node name="EdgeD" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.465, 0, 0.465)
+material_override = SubResource("Mat_edge")
+mesh = SubResource("BoxMesh_edge")
+
+[node name="LidTrim" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.485, 0)
+material_override = SubResource("Mat_edge")
+mesh = SubResource("BoxMesh_lid")
